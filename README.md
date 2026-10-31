@@ -1,3 +1,5 @@
+![Python checks](https://github.com/leakquicked/webguard-audit/actions/workflows/python-checks.yml/badge.svg)
+
 # WebGuard Audit
 
 A small Python CLI for **passive website configuration reviews** on domains you own or are explicitly authorized to assess.
