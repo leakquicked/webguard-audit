@@ -15,11 +15,19 @@ SECURITY_HEADERS = {
 }
 def normalize_target(value):
     value=value.strip()
-    if "://" not in value: value="https://"+value
-    parsed=urlparse(value)
-    if parsed.scheme not in ("http","https") or not parsed.hostname:
+    if "://" not in value:
+        value = "https://" + value
+    parsed = urlparse(value)
+    if parsed.scheme.lower() not in ("http", "https") or not parsed.hostname:
         raise ValueError("Provide a valid http(s) URL or domain.")
-    if parsed.username or parsed.password: raise ValueError("Credentials in URLs are not accepted.")
+    if parsed.username or parsed.password:
+        raise ValueError("Credentials in URLs are not accepted.")
+    try:
+        parsed.port  # Force validation of malformed/out-of-range ports.
+    except ValueError as exc:
+        raise ValueError("URL contains an invalid port.") from exc
+    if any(char.isspace() for char in parsed.hostname):
+        raise ValueError("Hostname must not contain whitespace.")
     return value, parsed
 
 def audit(target, timeout=8):
